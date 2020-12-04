@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='device-width,initial-scale=1.0'>
+        <style>
+            * {
+                margin: 0;
+                outline: none;
+            }
+            .list {
+                color: red;
+            }
+            .list-group {
+                color: blue;
+            }
+            .item {
+                font-size: 18px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id='app'></div>
+        <script src='config.js'></script>
+        <script src='util.js'></script>
+        <script src='diff.js'></script>
+        <script src='patch.js'></script>
+        <script src='element.js'></script>
+        <script>
+            //创建虚拟Dom
+            let virtualDom = createElement('ul', {class: 'list'}, [
+                createElement('li', {class: 'item'}, ['a']),
+                createElement('li', {class: 'item'}, ['b']),
+                createElement('li', {class: 'item'}, ['c']),
+            ]);
+            console.log(virtualDom);
+            //将虚拟Dom渲染为Dom元素
+            let node = renderDom(virtualDom);
+            let app = document.querySelector('#app');
+            app.appendChild(node);
+
+            //当虚拟Dom更新为如下
+            let newVirturalDom = createElement('ul', {class: 'list-group'}, [
+                createElement('li', {class: 'item'}, ['1']),
+                createElement('span', {class: 'item'}, ['b']),
+            ]);
+            console.log(newVirturalDom);
+            //对比新的虚拟Dom与原始Dom的区别
+            let patches = diff(virtualDom, newVirturalDom);
+            console.log(patches)
+            //将补丁更新到原始Dom上
+            patch(node, patches);
+        </script>
+    </body>
+</html>
